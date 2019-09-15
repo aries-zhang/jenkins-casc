@@ -1,0 +1,21 @@
+jenkins:
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+jobs:
+  - script: >
+      pipelineJob('pipeline') {
+          definition {
+              cps {
+                  scriptPath 'Jenkinsfile'
+                  scm {
+                    git {
+                        remote { url 'https://github.com/aries-zhang/jenkins-casc' }
+                        branch 'master'
+                    }
+                  }
+              }
+          }
+      }
