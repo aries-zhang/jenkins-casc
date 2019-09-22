@@ -1,5 +1,7 @@
-FROM jenkins/jenkins:lts
-COPY plugins /usr/share/jenkins/ref/plugins.list
-COPY jenkins.yaml /usr/share/jenkins/ref/jenkins.yaml
+FROM jenkinsci/blueocean
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.list
+ENV CASC_JENKINS_CONFIG="/var/jenkins_home/jenkins.yml"
+RUN /usr/local/bin/install-plugins.sh configuration-as-code:latest \
+                                      configuration-as-code-support:latest \
+                                      job-dsl:latest
+COPY jenkins.yaml /var/jenkins_home/jenkins.yml

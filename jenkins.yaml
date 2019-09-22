@@ -6,16 +6,8 @@ tool:
       name: "Default"
 jobs:
   - script: >
-      pipelineJob('pipeline') {
-          definition {
-              cps {
-                  scriptPath 'Jenkinsfile'
-                  scm {
-                    git {
-                        remote { url 'https://github.com/aries-zhang/jenkins-casc' }
-                        branch 'master'
-                    }
-                  }
-              }
-          }
+      freeStyleJob('example') {
+        steps {
+            shell('echo Hello World!')
+        }
       }
