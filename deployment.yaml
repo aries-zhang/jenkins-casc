@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: jenkins
-          image: arieszhang/jenkins-casc:0.1.3
+          image: arieszhang/jenkins-casc:0.2.0
           resources:
               requests:
                 memory: "1024Mi"
@@ -76,6 +76,24 @@ spec:
 
 ---
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: jenkins.home
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins
+          servicePort: 8080
+
+---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -94,6 +112,12 @@ data:
             password: ${JENKINS_ADMIN_PASSWORD:-P@ssw0rd}
       disableRememberMe: true
       crumbIssuer: "standard"
+      remotingSecurity:
+        enabled: true
+    unclassified:
+      location:
+        adminAddress: "address not configured yet <nobody@nowhere>"
+        url: "http://localhost:30000/"  
     tool:
       git:
         installations:
@@ -106,3 +130,62 @@ data:
                 shell('echo Hello World!')
             }
           }
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault
+  template:
+    metadata:
+      labels:
+        app: vault
+    spec:
+      containers:
+        - name: vault
+          image: vault:latest
+          resources:
+              requests:
+                memory: "256Mi"
+                cpu: "200m"
+              limits:
+                memory: "1024Mi"
+                cpu: "500m"
+          env:
+            - name: VAULT_ADDR
+              value: http://127.0.0.1:30200
+          ports:
+            - name: http-port
+              containerPort: 8200
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault
+spec:
+  type: NodePort
+  selector:
+    app: vault
+  ports:
+    - port: 8200
+      targetPort: 8200
+      nodePort: 30200
+
+
+# vault read auth/approle/role/jenkins-example/role-id
+# Key     Value                               
+# role_id 0fc39163-e44b-be51-d9de-29a7686c4cb3
+# vault write -f auth/approle/role/jenkins-example/secret-id
+# Must supply data or use -force
+# vault write -f auth/approle/role/jenkins-example/secret-id -force
+# Key                Value                               
+# secret_id          764d7d7a-8745-f380-2c80-507ce95eb18b
+# secret_id_accessor 0ed17247-9940-142a-e530-2b594a966a2c
