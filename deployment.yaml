@@ -81,6 +81,24 @@ spec:
 
 ---
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: jenkins.home
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins
+          servicePort: 8080
+
+---
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -99,6 +117,12 @@ data:
             password: ${JENKINS_ADMIN_PASSWORD:-P@ssw0rd}
       disableRememberMe: true
       crumbIssuer: "standard"
+      remotingSecurity:
+        enabled: true
+    unclassified:
+      location:
+        adminAddress: "address not configured yet <nobody@nowhere>"
+        url: "http://localhost:30000/"  
     tool:
       git:
         installations:
