@@ -5,9 +5,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    
-env:
-  VERSION: 0.2.${GITHUB_RUN_NUMBER}
 
 jobs:
 
@@ -22,7 +19,7 @@ jobs:
         repository     : 'arieszhang/jenkins-casc'
         username       : ${{ secrets.DOCKERHUB_USERNAME }}
         password       : ${{ secrets.DOCKERHUB_PASSWORD }}
-        tags           : ${{ env.VERSION }}, latest
+        tags           : 0.2.${{ github.run_number }}, latest
         add_git_labels : true
         tag_with_ref   : true
         tag_with_sha   : true
