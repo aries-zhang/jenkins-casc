@@ -19,7 +19,7 @@ jobs:
         repository     : 'arieszhang/jenkins-casc'
         username       : ${{ secrets.DOCKERHUB_USERNAME }}
         password       : ${{ secrets.DOCKERHUB_PASSWORD }}
-        tags           : 0.2.${{ env.GITHUB_RUN_NUMBER }}, latest
+        tags           : 0.2.${GITHUB_RUN_NUMBER}, latest
         add_git_labels : true
         tag_with_ref   : true
         tag_with_sha   : true
