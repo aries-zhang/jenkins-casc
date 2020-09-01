@@ -1,7 +1,7 @@
-FROM jenkinsci/blueocean
-ARG CURL_OPTIONS
-ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false" \
-    CASC_JENKINS_CONFIG="/var/jenkins_home/jenkins.yml"
-RUN /usr/local/bin/install-plugins.sh configuration-as-code:latest \
-                                      job-dsl:latest
-COPY jenkins.yaml /var/jenkins_home/jenkins.yml
+FROM jenkins/jenkins:latest
+ARG  CURL_OPTIONS
+RUN  /usr/local/bin/install-plugins.sh blueocean:latest \
+                                       configuration-as-code:latest \
+                                       workflow-aggregator:latest \
+                                       job-dsl:latest \ 
+                                       kubernetes:latest
