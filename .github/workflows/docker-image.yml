@@ -17,8 +17,8 @@ jobs:
     - uses: 'docker/build-push-action@v1'
       with:
         repository     : 'arieszhang/jenkins-casc'
-        username       : ${{ secrets.DOCKER_USERNAME }}
-        password       : ${{ secrets.DOCKER_PASSWORD }}
+        username       : ${{ secrets.DOCKERHUB_USERNAME }}
+        password       : ${{ secrets.DOCKERHUB_PASSWORD }}
         add_git_labels : true
         tag_with_ref   : true
         tag_with_sha   : true
