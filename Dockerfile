@@ -4,4 +4,5 @@ RUN  /usr/local/bin/install-plugins.sh blueocean:latest \
                                        configuration-as-code:latest \
                                        workflow-aggregator:latest \
                                        job-dsl:latest \ 
-                                       kubernetes:latest
+                                       kubernetes:latest \
+                                       hashicorp-vault-plugin

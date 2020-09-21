@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: jenkins
-          image: arieszhang/jenkins-casc:0.2.11
+          image: arieszhang/jenkins-casc:latest
           resources:
               requests:
                 memory: "1024Mi"
@@ -78,24 +78,6 @@ spec:
   ports:
     - port: 50000
       targetPort: 50000
-
----
-
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: jenkins-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: jenkins.home
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: jenkins
-          servicePort: 8080
 
 ---
 
