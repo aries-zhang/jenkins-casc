@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: jenkins
-          image: arieszhang/jenkins-casc:latest
+          image: arieszhang/jenkins-casc:0.2.13
           resources:
               requests:
                 memory: "1024Mi"
@@ -27,6 +27,16 @@ spec:
               value: -Djenkins.install.runSetupWizard=false
             - name: CASC_JENKINS_CONFIG
               value: "/var/jenkins_home/config/jenkins.yaml"
+            - name: VAULT_ROLE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-secrets
+                  key: jenkins-vault-role-id
+            - name: VAULT_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-secrets
+                  key: jenkins-vault-secret-id
           ports:
             - name: http-port
               containerPort: 8080
@@ -87,6 +97,17 @@ metadata:
   name: jenkins-config
 data:
   jenkins.yaml: |
+    credentials:
+      system:
+        domainCredentials:
+        - credentials:
+          - vaultAppRoleCredential:
+              description: "vault-approle"
+              id: "vault-approle"
+              path: "approle"
+              roleId: "${VAULT_ROLE_ID}"
+              scope: GLOBAL
+              secretId: "${VAULT_SECRET_ID}"
     jenkins:
       authorizationStrategy:
         loggedInUsersCanDoAnything:
@@ -110,8 +131,13 @@ data:
         enabled: true
     unclassified:
       location:
-        adminAddress: "address not configured yet <nobody@nowhere>"
-        url: "http://localhost:30000/"  
+        adminAddress: "http://jenkins.aries.me/"
+        url: "http://jenkins.aries.me/"
+      hashicorpVault:
+        configuration:
+          engineVersion: 2
+          vaultCredentialId: "vault-approle"
+          vaultUrl: "http://vault:8200"
     tool:
       git:
         installations:

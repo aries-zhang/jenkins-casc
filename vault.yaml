@@ -24,7 +24,7 @@ spec:
                 cpu: "500m"
           env:
             - name: VAULT_ADDR
-              value: http://127.0.0.1:30200
+              value: http://127.0.0.1:8200
           ports:
             - name: http-port
               containerPort: 8200
