@@ -28,6 +28,32 @@ spec:
           ports:
             - name: http-port
               containerPort: 8200
+          volumeMounts:
+            - name: vault-config
+              mountPath: /vault/config
+            - name: vault-data
+              mountPath: /mnt/vault/data
+      volumes:
+        - name: vault-config
+          configMap:
+              defaultMode: 420
+              name: vault-config
+        - name: vault-data
+          hostPath:
+            path: /tmp/vault
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-config
+data:
+  local.hcl: | 
+    disable_mlock = true
+    storage "file" {
+      path = "/mnt/vault/data"
+    }
 
 ---
 
