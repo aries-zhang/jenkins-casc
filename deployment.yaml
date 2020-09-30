@@ -37,6 +37,26 @@ spec:
                 secretKeyRef:
                   name: jenkins-secrets
                   key: jenkins-vault-secret-id
+          livenessProbe:
+            failureThreshold: 12
+            httpGet:
+              path: /login
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 80
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /login
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           ports:
             - name: http-port
               containerPort: 8080
