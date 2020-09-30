@@ -5,4 +5,5 @@ RUN  /usr/local/bin/install-plugins.sh blueocean:latest \
                                        workflow-aggregator:latest \
                                        job-dsl:latest \ 
                                        kubernetes:latest \
-                                       hashicorp-vault-plugin
+                                       hashicorp-vault-plugin \
+                                       prometheus
