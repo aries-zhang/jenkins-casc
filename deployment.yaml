@@ -71,7 +71,8 @@ spec:
               mountPath: /var/jenkins_home/init.groovy.d
       volumes:
         - name: jenkins-home
-          emptyDir: {}
+          hostPath:
+            path: /tmp/jenkins-home
         - name: jenkins-config
           configMap:
               defaultMode: 420
